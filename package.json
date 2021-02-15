@@ -1,0 +1,19 @@
+{
+  "name": "thoregondev",
+  "version": "1.0.0",
+  "description": "simple dev server for thoregon apps",
+  "main": "devserver.mjs",
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bernhard Lukassen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ws": "^7.4.2"
+  }
+}
