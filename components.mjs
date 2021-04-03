@@ -15,9 +15,9 @@ const thoregonroot = '/private/var/dev/Projects/ThoregonUniverse';
 const thatsmeroot  = '/private/var/dev/Projects/b-coop/thatsme/thoregon/thatsme.modules';
 
 export default {
-    'www'         : `${thoregonroot}/Thore͛gon`,
-    'ipfs.js'     : `${thoregonroot}/terra.modules/terra.ipfs/dist/ipfs.min.js`,
+    'www'         : `${thoregonroot}/ThoregonPuls`,
+    // 'ipfs.js'     : `${thoregonroot}/terra.modules/terra.ipfs/dist/ipfs.min.js`,
     // App Mappings
-    'thatsme.app' : `${thatsmeroot}/thatsme.app`,
-    'thatsme.chat': `${thatsmeroot}/thatsme.chat`,
+    // 'thatsme.app' : `${thatsmeroot}/thatsme.app`,
+    // 'thatsme.chat': `${thatsmeroot}/thatsme.chat`,
 }
