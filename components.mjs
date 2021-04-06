@@ -18,6 +18,6 @@ export default {
     'www'         : `${thoregonroot}/Puls`,
     // 'ipfs.js'     : `${thoregonroot}/terra.modules/terra.ipfs/dist/ipfs.min.js`,
     // App Mappings
-    // 'thatsme.app' : `${thatsmeroot}/thatsme.app`,
-    // 'thatsme.chat': `${thatsmeroot}/thatsme.chat`,
+    'thatsme.app' : `${thatsmeroot}/thatsme.app`,
+    'thatsme.chat': `${thatsmeroot}/thatsme.chat`,
 }
