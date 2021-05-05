@@ -11,15 +11,13 @@
  * the default mapping for thoregon components @see ./lib/thoregoncomponents.mjs
  */
 
-const thoregonroot = '/Users/mneitz/dev/thoregon';
-const thatsmeroot  = '/Users/mneitz/dev/thatsme/thoregon/thatsme.modules';
+const thoregonroot = '/private/var/dev/Projects/ThoregonUniverse';
+const thatsmeroot  = '/private/var/dev/Projects/b-coop/thatsme/thoregon/thatsme.modules';
 
 export default {
     'www'         : `${thoregonroot}/Puls`,
     // 'ipfs.js'     : `${thoregonroot}/terra.modules/terra.ipfs/dist/ipfs.min.js`,
     // App Mappings
-/*
     'thatsme.app' : `${thatsmeroot}/thatsme.app`,
     'thatsme.chat': `${thatsmeroot}/thatsme.chat`,
-*/
 }
