@@ -11,15 +11,15 @@ import { createServer } from 'http';
 import WebSocket        from 'ws';
 import FsMapper         from "./lib/fsmapper.mjs";
 
-const port = 7777;
+let port = 7777;
 
 class DevServer {
 
-    start() {
+    start(www) {
         (async () => {
             this._fs = new FsMapper(process.cwd());
             this._fs.onReady = () => this.establishWebsocketServer();
-            await this._fs.explore();
+            await this._fs.explore(www);
         })();
     }
 
@@ -105,4 +105,12 @@ class DevServer {
     }
 }
 
-new DevServer().start();
+const argv = process.argv;
+let i = argv.length-1;
+
+if (argv[2] === '-p') {
+    port = parseInt(argv[3]) ?? 7777;
+}
+const www = argv[i];
+
+new DevServer().start(www);
