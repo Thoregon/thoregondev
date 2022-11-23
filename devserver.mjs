@@ -105,12 +105,15 @@ class DevServer {
     }
 }
 
+let www;
 const argv = process.argv;
 let i = argv.length-1;
 
 if (argv[2] === '-p') {
     port = parseInt(argv[3]) ?? 7777;
+    www = argv[i];
+} else if (argv.length > 2) {
+    www = argv[i];
 }
-const www = argv[i];
 
 new DevServer().start(www);
