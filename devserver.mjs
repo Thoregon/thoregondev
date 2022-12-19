@@ -7,6 +7,7 @@
  */
 
 import express          from 'express';
+import cors             from 'cors';
 import { createServer } from 'http';
 import WebSocket        from 'ws';
 import FsMapper         from "./lib/fsmapper.mjs";
@@ -26,6 +27,7 @@ class DevServer {
     establishWebsocketServer() {
         const wwroot = this._fs.wwwroot;
         const app = express();
+        app.use(cors({ origin: '*' }));
         app.use(express.static(wwroot || './'));
         const server = createServer(app);
 
