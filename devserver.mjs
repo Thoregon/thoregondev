@@ -14,6 +14,8 @@ import FsMapper         from "./lib/fsmapper.mjs";
 
 let port = 7777;
 
+const debuglog = (...args) => {}; // console.log("DevServer ::", Date.now, ...args);
+
 class DevServer {
 
     start(www) {
@@ -83,17 +85,31 @@ class DevServer {
         ws.on('message', async (message) => this.message(message, ws));
         ws.on('close', () => this.close());
     }
-    listening() {}
-    quit() {}
-    error(err) {}
+    listening() {
+
+    }
+    quit() {
+        debuglog("QUIT");
+    }
+    error(err) {
+        debuglog("ERROR", err);
+    }
     headers(headers, req) {}
-    upgrade(request, socket, head) {}
+    upgrade(request, socket, head) {
+        debuglog("UPGRADE");
+    }
 
     async message(message, ws) {
-        let req = JSON.parse(message);
-        let res = await this.fs.process(req);
-        res.id = req.id;
-        ws.send(JSON.stringify(res));
+        try {
+            debuglog("> handle message", message);
+            let req = JSON.parse(message);
+            let res = await this.fs.process(req);
+            res.id  = req.id;
+            debuglog("< handle message", message);
+            ws.send(JSON.stringify(res));
+        } catch (e) {
+            debuglog("ERR handle message", e.stack ? e.stack : e.message);
+        }
     }
     close() {}
 
