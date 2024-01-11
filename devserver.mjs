@@ -133,5 +133,6 @@ if (argv[2] === '-p') {
 } else if (argv.length > 2) {
     www = argv[i];
 }
-
-new DevServer().start(www);
+const server = new DevServer();
+global.devserver = server;      // make it available for debugging
+server.start(www);
