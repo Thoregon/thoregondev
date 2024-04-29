@@ -10,28 +10,41 @@ import express          from 'express';
 import cors             from 'cors';
 import { createServer } from 'http';
 import FsMapper         from "./lib/fsmapper.mjs";
+import { program }      from 'commander';
 
-let port = 7777;
+// @see: https://github.com/tj/commander.js
+program.version('0.1.0');
 
 const debuglog = (...args) => {}; // console.log("DevServer ::", Date.now, ...args);
 
 class DevServer {
 
-    start(www) {
+    start(www, port, etc) {
         (async () => {
-            this._fs = new FsMapper(process.cwd());
+            this._port       = port ?? 7777;
+            this._etc        = etc;
+            this._fs         = new FsMapper(process.cwd());
             this._fs.onReady = () => this.establishServer();
             await this._fs.explore(www);
         })();
     }
 
     establishServer() {
+        const port   = this._port;
+        const etc    = this._etc;
         const wwroot = this._fs.wwwroot;
-        const app = express();
+        const app    = express();
         app.use(cors({ origin: '*' }));
-        app.use(express.static(wwroot || './', {index: 'thoregon.html'}));
+        if (etc) {
+            // rewrite config if specified
+            app.get('/etc/*', (req, res, next) => {
+                req.url     = etc + req.url.substring(4);
+                next();
+            })
+        }
+        app.use(express.static(wwroot || './', { index: 'thoregon.html' }));
         const dirs = this._fs.getRootDirs();
-        dirs.forEach((entry) => app.use('/'+entry.name, express.static(entry.path, { index: ['index.reliant.mjs', 'index.mjs'] })));
+        dirs.forEach((entry) => app.use('/' + entry.name, express.static(entry.path, { index: ['index.reliant.mjs', 'index.mjs'] })));
         app.use((req, res, next) => {
             const url = req.url;
             if (url?.endsWith("!")) return this._fs.crawlReq(req, res);
@@ -52,16 +65,18 @@ class DevServer {
     }
 }
 
-let www;
-const argv = process.argv;
-let i = argv.length-1;
+program
+    // .command('thoregon [file]')
+    .argument('[www]', 'www (static) directory')
+    .description("run devserver")
+    .option("-p, --port <port>", "port to use", 7777)      // "kind of package, one of ['browser', 'node', 'electron']"
+    .option("-e, --etc <etc>", "config dir to use", )
+    .action(async (www, options) => {
+        const { port, etc } = options;
+        const server = new DevServer();
+        global.devserver = server;      // make it available for debugging
+        server.start(www, port, etc);
+    });
 
-if (argv[2] === '-p') {
-    port = parseInt(argv[3]) ?? 7777;
-    www = argv[i];
-} else if (argv.length > 2) {
-    www = argv[i];
-}
-const server = new DevServer();
-global.devserver = server;      // make it available for debugging
-server.start(www);
+program.parse(process.argv);
+
