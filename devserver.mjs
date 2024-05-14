@@ -47,7 +47,7 @@ class DevServer {
         dirs.forEach((entry) => app.use('/' + entry.name, express.static(entry.path, { index: ['index.reliant.mjs', 'index.mjs'] })));
         app.use((req, res, next) => {
             const url = req.url;
-            if (url?.endsWith("!")) return this._fs.crawlReq(req, res);
+            if (url?.endsWith("!") || url?.endsWith(".ls")) return this._fs.crawlReq(req, res);
             this._fs.sendIndex(url, res, next);
         });
 
