@@ -1,0 +1,93 @@
+# -------------------------------
+# upay.me services
+# -------------------------------
+
+nexus.upay.me {
+    root * /www/upaymeui
+    uri replace /etc/ /.etc/nexus/  # config for domain
+
+    # resources supplied by vendor
+    @post_res {
+        method POST
+        path /res/*
+    }
+    reverse_proxy @post_res upaymeresourcenexus:30000
+    uri replace /res/ /res/nexus/ # resources for vendor (images, pdf, ...)
+
+    import modules
+
+    reverse_proxy /heartbeat/* upaymenexus:30000   # port to the nexus service agent
+#    reverse_proxy /services/* upaymenexus:30000   # port to the vendors service agent
+    reverse_proxy /confirm/* upaymenexus:30000   # port to the nexus service agent
+
+    file_server
+    handle_errors {
+        rewrite * /404-notfound.html
+        file_server
+    }
+}
+
+affiliates.upay.me {
+    root * /www/upaymeui
+    uri replace /etc/ /.etc/upaymeportal/  # config for domain
+
+    # resources supplied by vendor
+    @post_res {
+        method POST
+        path /res/*
+    }
+    reverse_proxy @post_res upaymeresourcenexus:30000
+    uri replace /res/ /res/nexus/ # resources for vendor (images, pdf, ...)
+
+    import modules
+
+    reverse_proxy /heartbeat/* upaymenexus:30000   # port to the nexus service agent
+#    reverse_proxy /services/* upaymenexus:30000   # port to the vendors service agent
+    reverse_proxy /confirm/* upaymenexus:30000   # port to the nexus service agent
+    file_server
+    handle_errors {
+        rewrite * /404-notfound.html
+        file_server
+    }
+}
+
+portal.upay.me {
+    root * /www/upaymeui
+    uri replace /etc/ /.etc/upaymeportal/  # config for domain
+
+    # resources supplied by vendor
+    @post_res {
+        method POST
+        path /res/*
+    }
+    reverse_proxy @post_res upaymeresourcenexus:30000
+    uri replace /res/ /res/nexus/ # resources for vendor (images, pdf, ...)
+
+    import modules
+
+    reverse_proxy /heartbeat/* upaymenexus:30000   # port to the nexus service agent
+ #   reverse_proxy /services/* upaymenexus:30000   # port to the vendors service agent
+    reverse_proxy /confirm/* upaymenexus:30000   # port to the nexus service agent
+
+    file_server
+    handle_errors {
+        rewrite * /404-notfound.html
+        file_server
+    }
+}
+
+# -------------------------------
+# testing
+# -------------------------------
+
+upayme.thoregon.io {
+    root * /www/upaymeui
+    uri replace /etc/ /.etc/upayme/
+    import modules
+    file_server
+    handle_errors {
+        rewrite * /404-notfound.html
+        file_server
+    }
+}
+

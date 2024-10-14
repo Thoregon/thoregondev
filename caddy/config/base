@@ -1,0 +1,19 @@
+# -------------------------------
+# infrastructure services
+# -------------------------------
+
+peer.thoregon.io {
+    reverse_proxy peer-signaling:9000
+}
+
+portainer.thoregon.io {
+    reverse_proxy portainer:9000
+}
+
+portainer.bernhard-lukassen.com {
+    reverse_proxy portainer:9000
+}
+
+resource.thoregon.io {
+     reverse_proxy resourceserver:7779
+}
