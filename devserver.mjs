@@ -8,6 +8,7 @@
 
 import express          from 'express';
 import cors             from 'cors';
+import path             from "path";
 import { createServer } from 'http';
 import FsMapper         from "./lib/fsmapper.mjs";
 import { program }      from 'commander';
@@ -16,6 +17,8 @@ import { program }      from 'commander';
 program.version('0.1.0');
 
 const debuglog = (...args) => {}; // console.log("DevServer ::", Date.now, ...args);
+
+const envlocation = path.join(process.cwd(), '../env/etcui');
 
 class DevServer {
 
@@ -35,13 +38,7 @@ class DevServer {
         const wwroot = this._fs.wwwroot;
         const app    = express();
         app.use(cors({ origin: '*' }));
-        if (etc) {
-            // rewrite config if specified
-            app.get('/etc/*', (req, res, next) => {
-                req.url     = etc + req.url.substring(4);
-                next();
-            })
-        }
+
         app.use(express.static(wwroot || './', { index: 'thoregon.html' }));
         const dirs = this._fs.getRootDirs();
         dirs.forEach((entry) => app.use('/' + entry.name, express.static(entry.path, { index: ['index.reliant.mjs', 'index.mjs'] })));
@@ -50,7 +47,31 @@ class DevServer {
             if (url?.endsWith("!") || url?.endsWith(".ls")) return this._fs.crawlReq(req, res);
             this._fs.sendIndex(url, res, next);
         });
-
+        if (etc) {
+            // rewrite config if specified
+            const etclocation = path.join(envlocation, etc.startsWith('/') ? etc.substring(1) : etc);
+            // const etcstatic = express.static(etclocation)
+            app.get('/etc/*', (req, res, next) => {
+                let url = req.url.substring(5);
+                if (url.endsWith('/')) url = url.slice(0, -1);
+                //url = path.join(etclocation, url);
+                var options = {
+                    root: etclocation,
+                    dotfiles: 'deny',
+                    headers: {
+                        'x-timestamp': Date.now(),
+                        'x-sent': true
+                    }
+                }
+                res.sendFile(url, options, (err) => {
+                    if (err) {
+                        console.error(err);
+                        next();
+                    }
+                });
+                // next();
+            });
+        }
         app.listen(port, () => {
             console.log(`>> Dev Server listening on port ${port}`)
         })
